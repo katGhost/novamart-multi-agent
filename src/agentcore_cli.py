@@ -250,16 +250,26 @@ def stage_runtime_code() -> str:
 # DEPLOY / STATE
 # ─────────────────────────────────────────────────────
 
+
 def deploy(verbose: bool = False) -> None:
     """
-    Run `agentcore deploy -y` (non-interactive). The CLI packages
-    build/runtime/, synthesizes the CDK stack and creates or updates the
-    AgentCore Runtime; it bootstraps CDK on the first run.
+    Run the AgentCore CLI deployment.
+
+    The CLI packages build/runtime/ and creates or updates the
+    AgentCore resources through its deployment infrastructure.
     """
     if not os.path.isdir(RUNTIME_CODE_DIR):
         stage_runtime_code()
-    print(f"  Running: agentcore deploy -y   (CLI {cli_version()}, region {config.AWS_REGION})", flush=True)
-    args = ['deploy', '-y'] + (['-v'] if verbose else [])
+
+    print(
+        f"  Running: agentcore deploy "
+        f"(CLI {cli_version()}, region {config.AWS_REGION})",
+        flush=True,
+    )
+
+    args = ['deploy']
+    if verbose:
+        args.append('-v')
     run(*args)
 
 
